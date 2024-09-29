@@ -1,0 +1,63 @@
+/*
+ * Btn_Mode.c
+ *
+ *  Created on: Jul 21, 2019
+ *      Author: XuanHung
+ */
+
+#include "Btn_Mode.h"
+#include "Buzzer.h"
+#include "DIO.h"
+
+static uint8_t BtnMode_st;
+static uint8_t BtnMode_Lock;
+
+void BtnMode_Ini()
+{
+	DIO_Config_Input(BTN_MODE_GPIO_PORT,BTN_MODE_GPIO_PIN);
+	BtnMode_st = RELEASED;
+	BtnMode_Lock = 0;
+}
+
+void BtnMode_Proc()
+{
+#if (BTN_MODE_ACTIVE_STATE == ACTIVE_LOW)
+	if (HAL_GPIO_ReadPin(BTN_MODE_GPIO_PORT,BTN_MODE_GPIO_PIN) == GPIO_PIN_RESET){
+		BtnMode_st	= PRESSED;
+	}
+	else
+	{
+		BtnMode_st	= RELEASED;
+	}
+#elif
+	if (HAL_GPIO_ReadPin(BTN_MODE_GPIO_PORT,BTN_MODE_GPIO_PIN) == GPIO_PIN_SET){
+			BtnMode_st	= PRESSED;
+		}
+		else
+		{
+			BtnMode_st	= RELEASED;
+		}
+#endif
+}
+
+uint8_t BtnMode_Pressed(void)
+{
+	if (BtnMode_Lock == 0)
+	{
+		if (BtnMode_st == PRESSED)
+		{
+			Buzzer_Sound(60,60,2);
+			BtnMode_Lock = 1;
+			return 1;
+		}
+	}
+	else
+	{
+		if (BtnMode_st == RELEASED)
+		{
+			BtnMode_Lock = 0;
+		}
+
+	}
+	return 0;
+}

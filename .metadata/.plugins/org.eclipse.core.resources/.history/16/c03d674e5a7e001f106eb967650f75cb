@@ -1,0 +1,51 @@
+/*
+ * OS_Schedule.c
+ *
+ *  Created on: Aug 10, 2019
+ *      Author: XuanHung
+ */
+
+#include "stm32f0xx_hal.h"
+#include "OS_Schedule.h"
+#include "app.h"
+
+uint16_t Tick_10ms = 0;
+uint16_t Tick_100ms = 0;
+uint8_t oneSecondFlag;
+void ProcessInit()
+{
+	Tick_10ms = 1;
+	Tick_100ms = 0;
+	oneSecondFlag = 0;
+}
+
+void Process10Ms()
+{
+	if (Tick_10ms >= SCHED_PROC_10MS)
+	{
+		Buzzer_Proc();
+		TM1637_Proc();
+		BtnMode_Proc();
+		BtnStart_Proc();
+		BtnTrain_Proc();
+		Application_Proc();
+		Tick_10ms = 0;
+
+	}
+
+}
+void Process100Ms()
+{
+	if (Tick_100ms >= SCHED_PROC_100MS)
+	{
+		DecreaseCountHalfSecond();
+		DecreaseCountSecond();
+		Tick_100ms = 0;
+	}
+}
+
+void OS_Sched_Tick_Increase()
+{
+	Tick_10ms++;
+	Tick_100ms++;
+}

@@ -1,0 +1,10 @@
+20:26:57 **** Incremental Build of configuration Release for project BadmintonV2_Main ****
+make -j4 all 
+arm-none-eabi-size   BadmintonV2_Main.elf 
+   text	   data	    bss	    dec	    hex	filename
+  13344	   1112	   2468	  16924	   421c	BadmintonV2_Main.elf
+Finished building: default.size.stdout
+ 
+
+20:26:58 Build Finished. 0 errors, 0 warnings. (took 438ms)
+
